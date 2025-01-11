@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/opengovern/og-describer-tailscale/mappings"
 	"github.com/opengovern/og-describer-tailscale/pkg/describer"
 	model "github.com/opengovern/og-describer-tailscale/pkg/sdk/models"
 	"github.com/opengovern/og-describer-tailscale/provider"
 	"github.com/opengovern/og-describer-tailscale/provider/configs"
+	"github.com/opengovern/og-describer-tailscale/steampipe"
 	"github.com/opengovern/og-util/pkg/describe"
 	"github.com/opengovern/og-util/pkg/es"
 	"github.com/spf13/cobra"
@@ -59,7 +59,7 @@ var describerCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		plg := mappings.Plugin()
+		plg := steampipe.Plugin()
 
 		f := func(resource model.Resource) error {
 			if resource.Description == nil {
@@ -90,7 +90,7 @@ var describerCmd = &cobra.Command{
 			}
 
 			if plg != nil {
-				_, _, err = mappings.ExtractTagsAndNames(logger, plg, job.ResourceType, resource)
+				_, _, err = steampipe.ExtractTagsAndNames(logger, plg, job.ResourceType, resource)
 				if err != nil {
 					logger.Error("failed to build tags for service", zap.Error(err), zap.String("resourceType", job.ResourceType), zap.Any("resource", resource))
 				}

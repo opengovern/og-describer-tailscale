@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-errors/errors"
-	"github.com/opengovern/og-describer-tailscale/mappings"
 	model "github.com/opengovern/og-describer-tailscale/pkg/sdk/models"
 	"github.com/opengovern/og-describer-tailscale/provider"
 	"github.com/opengovern/og-describer-tailscale/provider/configs"
+	"github.com/opengovern/og-describer-tailscale/steampipe"
 	describe2 "github.com/opengovern/og-util/pkg/describe"
 	"github.com/opengovern/og-util/pkg/es"
 	"github.com/opengovern/og-util/pkg/vault"
@@ -88,8 +88,8 @@ func doDescribe(
 		return nil, fmt.Errorf("failed to connect to resource sender: %w", err)
 	}
 
-	logger.Info("Connect to mappings plugin")
-	plg := mappings.Plugin()
+	logger.Info("Connect to steampipe plugin")
+	plg := steampipe.Plugin()
 	logger.Info("Account Config From Map")
 	creds, err := provider.AccountCredentialsFromMap(config)
 	if err != nil {
@@ -127,7 +127,7 @@ func doDescribe(
 		tags := make(map[string]string)
 
 		if plg != nil {
-			tags, _, err = mappings.ExtractTagsAndNames(logger, plg, job.ResourceType, resource)
+			tags, _, err = steampipe.ExtractTagsAndNames(logger, plg, job.ResourceType, resource)
 			if err != nil {
 				logger.Error("failed to build tags for service", zap.Error(err), zap.String("resourceType", job.ResourceType), zap.Any("resource", resource))
 			}

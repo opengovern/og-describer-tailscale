@@ -41,7 +41,7 @@ func main() {
 	}
 
 	if indexMap == nil || len(*indexMap) == 0 {
-		v := "../../../../mappings/table_index_map.go"
+		v := "../../../../steampipe/table_index_map.go"
 		indexMap = &v
 	}
 
@@ -56,7 +56,7 @@ func main() {
 
 	// Generate the index map file as before
 	b := &strings.Builder{}
-	b.WriteString(fmt.Sprintf(`package mappings
+	b.WriteString(fmt.Sprintf(`package steampipe
 
 import (
 	"%[1]s/pkg/sdk/es"

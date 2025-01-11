@@ -1,9 +1,9 @@
 package configs
 
 const (
-	StreamName           = "stream_name"
-	JobQueueTopic        = "job_queue_topic"
-	ConsumerGroup        = "consumer-group"
-	JobQueueTopicManuals = "job_queue_topic_manuals"
-	ConsumerGroupManuals = "consumer-group-manuals"
+	StreamName           = "og_describer_tailscale"
+	JobQueueTopic        = "og_describer_tailscale_job_queue"
+	ConsumerGroup        = "describer-tailscale"
+	JobQueueTopicManuals = "og_describer_tailscale_manuals_job_queue"
+	ConsumerGroupManuals = "describer-tailscale-manuals"
 )

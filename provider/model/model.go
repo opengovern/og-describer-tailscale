@@ -119,3 +119,37 @@ type DeviceDescription struct {
 	TailnetLockKey            string
 	PostureIdentity           *PostureIdentity
 }
+
+type UserListResponse struct {
+	Users []UserJSON `json:"users"`
+}
+
+type UserJSON struct {
+	ID                 string    `json:"id"`
+	DisplayName        string    `json:"displayName"`
+	LoginName          string    `json:"loginName"`
+	ProfilePicURL      string    `json:"profilePicUrl"`
+	TailnetID          string    `json:"tailnetId"`
+	Created            time.Time `json:"created"`
+	Type               string    `json:"type"`
+	Role               string    `json:"role"`
+	Status             string    `json:"status"`
+	DeviceCount        int       `json:"deviceCount"`
+	LastSeen           time.Time `json:"lastSeen"`
+	CurrentlyConnected bool      `json:"currentlyConnected"`
+}
+
+type UserDescription struct {
+	ID                 string
+	DisplayName        string
+	LoginName          string
+	ProfilePicURL      string
+	TailnetID          string
+	Created            time.Time
+	Type               string
+	Role               string
+	Status             string
+	DeviceCount        int
+	LastSeen           time.Time
+	CurrentlyConnected bool
+}

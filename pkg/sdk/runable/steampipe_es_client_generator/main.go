@@ -20,10 +20,10 @@ var (
 	file              = flag.String("file", "", "Location of the model file")
 	output            = flag.String("output", "", "Location of the output file")
 	resourceTypesFile = flag.String("resourceTypesFile", "", "Location of the resource types json file file")
-	pluginPath        = flag.String("pluginPath", "", "Location of the mappings plugin")
+	pluginPath        = flag.String("pluginPath", "", "Location of the steampipe plugin")
 )
 
-const PluginPath = "" // TODO: give the mappings plugin path
+const PluginPath = "../../../../plugin/tailscale"
 
 type IntegrationType struct {
 	Name            string
@@ -402,8 +402,8 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 		import (
 			"context"
 			essdk "github.com/opengovern/og-util/pkg/opengovernance-es-sdk"
-			steampipesdk "github.com/opengovern/og-util/pkg/mappings"
-			"github.com/turbot/mappings-plugin-sdk/v5/plugin"
+			steampipesdk "github.com/opengovern/og-util/pkg/steampipe"
+			"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 			`+configs.IntegrationTypeLower+` "`+configs.OGPluginRepoURL+`/provider/model"
             "runtime"
 		)
