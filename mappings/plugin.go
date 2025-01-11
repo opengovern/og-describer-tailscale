@@ -1,4 +1,4 @@
-package steampipe
+package mappings
 
 import (
 	"context"
@@ -34,7 +34,7 @@ func ExtractTableName(resourceType string) string {
 
 // Plugin TODO
 func Plugin() *plugin.Plugin {
-	// return steampipe plugin object
+	// return mappings plugin object
 	// Example:
 	// return aws.Plugin(buildContext())
 	return nil

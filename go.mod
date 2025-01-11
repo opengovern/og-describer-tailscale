@@ -1,4 +1,4 @@
-module github.com/opengovern/og-describer-template
+module github.com/opengovern/og-describer-tailscale
 
 go 1.22.4
 
@@ -12,7 +12,7 @@ require (
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/nats-io/nats.go v1.36.0
 	github.com/opengovern/og-describer-cohereai v0.3.1
-	github.com/opengovern/og-util v1.5.1
+	github.com/opengovern/og-util v1.7.2
 	github.com/spf13/cobra v1.7.0
 	github.com/turbot/steampipe-plugin-sdk/v5 v5.10.4
 	go.uber.org/zap v1.27.0

@@ -14,7 +14,7 @@ Use SQL to generate, classify, summarize text and more from CohereAI.
 Install the plugin with [Steampipe](https://steampipe.io):
 
 ```shell
-steampipe plugin install mr-destructive/cohereai
+mappings plugin install mr-destructive/cohereai
 ```
 
 Configure your API key in `~/.steampipe/config/cohereai.spc`:
@@ -39,7 +39,7 @@ export COHEREAI_API_KEY=asLGEMKWMfkeFKENW038493fnWeng
 Run steampipe:
 
 ```shell
-steampipe query
+mappings query
 ```
 
 Run a query:
@@ -64,7 +64,7 @@ Clone:
 
 ```sh
 git clone https://github.com/mr-destructive/steampipe-plugin-cohereai.git
-cd steampipe-plugin-cohereai
+cd mappings-plugin-cohereai
 ```
 
 Build, which automatically installs the new version to your `~/.steampipe/plugins` directory:

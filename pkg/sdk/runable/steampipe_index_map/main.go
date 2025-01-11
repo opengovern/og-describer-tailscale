@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/opengovern/og-describer-template/provider/configs"
+	"github.com/opengovern/og-describer-tailscale/provider/configs"
 	"os"
 	"strings"
 )
@@ -41,7 +41,7 @@ func main() {
 	}
 
 	if indexMap == nil || len(*indexMap) == 0 {
-		v := "../../../../steampipe/table_index_map.go"
+		v := "../../../../mappings/table_index_map.go"
 		indexMap = &v
 	}
 
@@ -56,7 +56,7 @@ func main() {
 
 	// Generate the index map file as before
 	b := &strings.Builder{}
-	b.WriteString(fmt.Sprintf(`package steampipe
+	b.WriteString(fmt.Sprintf(`package mappings
 
 import (
 	"%[1]s/pkg/sdk/es"
