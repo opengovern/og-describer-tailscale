@@ -65,59 +65,59 @@ type DeviceListResponse struct {
 }
 
 type DeviceJSON struct {
-	Addresses                 []string                `json:"addresses"`
-	ID                        string                  `json:"id"`
-	NodeID                    string                  `json:"nodeId"`
-	User                      string                  `json:"user"`
-	Name                      string                  `json:"name"`
-	Hostname                  string                  `json:"hostname"`
-	ClientVersion             string                  `json:"clientVersion"`
-	UpdateAvailable           bool                    `json:"updateAvailable"`
-	OS                        string                  `json:"os"`
-	Created                   *time.Time              `json:"created"`
-	LastSeen                  *time.Time              `json:"lastSeen"`
-	KeyExpiryDisabled         bool                    `json:"keyExpiryDisabled"`
-	Expires                   *time.Time              `json:"expires"`
-	Authorized                bool                    `json:"authorized"`
-	IsExternal                bool                    `json:"isExternal"`
-	MachineKey                string                  `json:"machineKey"`
-	NodeKey                   string                  `json:"nodeKey"`
-	BlocksIncomingConnections bool                    `json:"blocksIncomingConnections"`
-	EnabledRoutes             []string                `json:"enabledRoutes"`
-	AdvertisedRoutes          []string                `json:"advertisedRoutes"`
-	ClientConnectivity        *ClientConnectivityJSON `json:"clientConnectivity"`
-	Tags                      []string                `json:"tags"`
-	TailnetLockError          string                  `json:"tailnetLockError"`
-	TailnetLockKey            string                  `json:"tailnetLockKey"`
-	PostureIdentity           *PostureIdentityJSON    `json:"postureIdentity"`
+	Addresses []string `json:"addresses"`
+	ID        string   `json:"id"`
+	NodeID    string   `json:"nodeId"`
+	User      string   `json:"user"`
+	Name      string   `json:"name"`
+	//Hostname                  string                  `json:"hostname"`
+	ClientVersion string `json:"clientVersion"`
+	//UpdateAvailable           bool                    `json:"updateAvailable"`
+	OS string `json:"os"`
+	//Created                   *time.Time              `json:"created"`
+	LastSeen *time.Time `json:"lastSeen"`
+	//KeyExpiryDisabled         bool                    `json:"keyExpiryDisabled"`
+	//Expires                   *time.Time              `json:"expires"`
+	//Authorized                bool                    `json:"authorized"`
+	//IsExternal                bool                    `json:"isExternal"`
+	//MachineKey                string                  `json:"machineKey"`
+	//NodeKey                   string                  `json:"nodeKey"`
+	//BlocksIncomingConnections bool                    `json:"blocksIncomingConnections"`
+	//EnabledRoutes             []string                `json:"enabledRoutes"`
+	//AdvertisedRoutes          []string                `json:"advertisedRoutes"`
+	ClientConnectivity *ClientConnectivityJSON `json:"clientConnectivity"`
+	Tags               []string                `json:"tags"`
+	//TailnetLockError          string                  `json:"tailnetLockError"`
+	//TailnetLockKey            string                  `json:"tailnetLockKey"`
+	PostureIdentity *PostureIdentityJSON `json:"postureIdentity"`
 }
 
 type DeviceDescription struct {
-	Addresses                 []string
-	ID                        string
-	NodeID                    string
-	User                      string
-	Name                      string
-	Hostname                  string
-	ClientVersion             string
-	UpdateAvailable           bool
-	OS                        string
-	Created                   *time.Time
-	LastSeen                  *time.Time
-	KeyExpiryDisabled         bool
-	Expires                   *time.Time
-	Authorized                bool
-	IsExternal                bool
-	MachineKey                string
-	NodeKey                   string
-	BlocksIncomingConnections bool
-	EnabledRoutes             []string
-	AdvertisedRoutes          []string
-	ClientConnectivity        *ClientConnectivity
-	Tags                      []string
-	TailnetLockError          string
-	TailnetLockKey            string
-	PostureIdentity           *PostureIdentity
+	Addresses []string
+	ID        string
+	NodeID    string
+	User      string
+	Name      string
+	//Hostname                  string
+	ClientVersion string
+	//UpdateAvailable           bool
+	OS string
+	//Created                   *time.Time
+	LastSeen *time.Time
+	//KeyExpiryDisabled         bool
+	//Expires                   *time.Time
+	//Authorized                bool
+	//IsExternal                bool
+	//MachineKey                string
+	//NodeKey                   string
+	//BlocksIncomingConnections bool
+	//EnabledRoutes             []string
+	//AdvertisedRoutes          []string
+	ClientConnectivity *ClientConnectivity
+	Tags               []string
+	//TailnetLockError          string
+	//TailnetLockKey            string
+	PostureIdentity *PostureIdentity
 }
 
 type UserListResponse struct {
@@ -125,10 +125,10 @@ type UserListResponse struct {
 }
 
 type UserJSON struct {
-	ID                 string    `json:"id"`
-	DisplayName        string    `json:"displayName"`
-	LoginName          string    `json:"loginName"`
-	ProfilePicURL      string    `json:"profilePicUrl"`
+	ID          string `json:"id"`
+	DisplayName string `json:"displayName"`
+	LoginName   string `json:"loginName"`
+	//ProfilePicURL      string    `json:"profilePicUrl"`
 	TailnetID          string    `json:"tailnetId"`
 	Created            time.Time `json:"created"`
 	Type               string    `json:"type"`
@@ -140,10 +140,10 @@ type UserJSON struct {
 }
 
 type UserDescription struct {
-	ID                 string
-	DisplayName        string
-	LoginName          string
-	ProfilePicURL      string
+	ID          string
+	DisplayName string
+	LoginName   string
+	//ProfilePicURL      string
 	TailnetID          string
 	Created            time.Time
 	Type               string

@@ -21,7 +21,7 @@ func tableTailScaleUser(ctx context.Context) *plugin.Table {
 			{Name: "id", Type: proto.ColumnType_STRING, Transform: transform.FromField("ID"), Description: "The unique identifier for the user."},
 			{Name: "display_name", Type: proto.ColumnType_STRING, Transform: transform.FromField("DisplayName"), Description: "The display name of the user."},
 			{Name: "login_name", Type: proto.ColumnType_STRING, Transform: transform.FromField("LoginName"), Description: "The login name of the user."},
-			{Name: "profile_pic_url", Type: proto.ColumnType_STRING, Transform: transform.FromField("ProfilePicURL"), Description: "The profile picture URL of the user."},
+			//{Name: "profile_pic_url", Type: proto.ColumnType_STRING, Transform: transform.FromField("ProfilePicURL"), Description: "The profile picture URL of the user."},
 			{Name: "tailnet_id", Type: proto.ColumnType_STRING, Transform: transform.FromField("TailnetID"), Description: "The tailnet ID associated with the user."},
 			{Name: "created", Type: proto.ColumnType_TIMESTAMP, Transform: transform.FromField("Created"), Description: "The time the user was created."},
 			{Name: "type", Type: proto.ColumnType_STRING, Transform: transform.FromField("Type"), Description: "The type of user, such as member or shared."},
