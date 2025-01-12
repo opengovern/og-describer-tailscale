@@ -882,221 +882,6 @@ func GetKey(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (in
 
 // ==========================  END: Key =============================
 
-// ==========================  START: UserInvite =============================
-
-type UserInvite struct {
-	ResourceID      string                          `json:"resource_id"`
-	PlatformID      string                          `json:"platform_id"`
-	Description     tailscale.UserInviteDescription `json:"Description"`
-	Metadata        tailscale.Metadata              `json:"metadata"`
-	DescribedBy     string                          `json:"described_by"`
-	ResourceType    string                          `json:"resource_type"`
-	IntegrationType string                          `json:"integration_type"`
-	IntegrationID   string                          `json:"integration_id"`
-}
-
-type UserInviteHit struct {
-	ID      string        `json:"_id"`
-	Score   float64       `json:"_score"`
-	Index   string        `json:"_index"`
-	Type    string        `json:"_type"`
-	Version int64         `json:"_version,omitempty"`
-	Source  UserInvite    `json:"_source"`
-	Sort    []interface{} `json:"sort"`
-}
-
-type UserInviteHits struct {
-	Total essdk.SearchTotal `json:"total"`
-	Hits  []UserInviteHit   `json:"hits"`
-}
-
-type UserInviteSearchResponse struct {
-	PitID string         `json:"pit_id"`
-	Hits  UserInviteHits `json:"hits"`
-}
-
-type UserInvitePaginator struct {
-	paginator *essdk.BaseESPaginator
-}
-
-func (k Client) NewUserInvitePaginator(filters []essdk.BoolFilter, limit *int64) (UserInvitePaginator, error) {
-	paginator, err := essdk.NewPaginator(k.ES(), "tailscale_user_invite", filters, limit)
-	if err != nil {
-		return UserInvitePaginator{}, err
-	}
-
-	p := UserInvitePaginator{
-		paginator: paginator,
-	}
-
-	return p, nil
-}
-
-func (p UserInvitePaginator) HasNext() bool {
-	return !p.paginator.Done()
-}
-
-func (p UserInvitePaginator) Close(ctx context.Context) error {
-	return p.paginator.Deallocate(ctx)
-}
-
-func (p UserInvitePaginator) NextPage(ctx context.Context) ([]UserInvite, error) {
-	var response UserInviteSearchResponse
-	err := p.paginator.Search(ctx, &response)
-	if err != nil {
-		return nil, err
-	}
-
-	var values []UserInvite
-	for _, hit := range response.Hits.Hits {
-		values = append(values, hit.Source)
-	}
-
-	hits := int64(len(response.Hits.Hits))
-	if hits > 0 {
-		p.paginator.UpdateState(hits, response.Hits.Hits[hits-1].Sort, response.PitID)
-	} else {
-		p.paginator.UpdateState(hits, nil, "")
-	}
-
-	return values, nil
-}
-
-var listUserInviteFilters = map[string]string{
-	"email":              "Description.Email",
-	"id":                 "Description.ID",
-	"invite_url":         "Description.InviteURL",
-	"inviter_id":         "Description.InviterID",
-	"last_email_sent_at": "Description.LastEmailSentAt",
-	"role":               "Description.Role",
-	"tailnet_id":         "Description.TailnetID",
-}
-
-func ListUserInvite(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
-	plugin.Logger(ctx).Trace("ListUserInvite")
-	runtime.GC()
-
-	// create service
-	cfg := essdk.GetConfig(d.Connection)
-	ke, err := essdk.NewClientCached(cfg, d.ConnectionCache, ctx)
-	if err != nil {
-		plugin.Logger(ctx).Error("ListUserInvite NewClientCached", "error", err)
-		return nil, err
-	}
-	k := Client{Client: ke}
-
-	sc, err := steampipesdk.NewSelfClientCached(ctx, d.ConnectionCache)
-	if err != nil {
-		plugin.Logger(ctx).Error("ListUserInvite NewSelfClientCached", "error", err)
-		return nil, err
-	}
-	integrationId, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyIntegrationID)
-	if err != nil {
-		plugin.Logger(ctx).Error("ListUserInvite GetConfigTableValueOrNil for OpenGovernanceConfigKeyIntegrationID", "error", err)
-		return nil, err
-	}
-	encodedResourceCollectionFilters, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyResourceCollectionFilters)
-	if err != nil {
-		plugin.Logger(ctx).Error("ListUserInvite GetConfigTableValueOrNil for OpenGovernanceConfigKeyResourceCollectionFilters", "error", err)
-		return nil, err
-	}
-	clientType, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyClientType)
-	if err != nil {
-		plugin.Logger(ctx).Error("ListUserInvite GetConfigTableValueOrNil for OpenGovernanceConfigKeyClientType", "error", err)
-		return nil, err
-	}
-
-	paginator, err := k.NewUserInvitePaginator(essdk.BuildFilter(ctx, d.QueryContext, listUserInviteFilters, integrationId, encodedResourceCollectionFilters, clientType), d.QueryContext.Limit)
-	if err != nil {
-		plugin.Logger(ctx).Error("ListUserInvite NewUserInvitePaginator", "error", err)
-		return nil, err
-	}
-
-	for paginator.HasNext() {
-		page, err := paginator.NextPage(ctx)
-		if err != nil {
-			plugin.Logger(ctx).Error("ListUserInvite paginator.NextPage", "error", err)
-			return nil, err
-		}
-
-		for _, v := range page {
-			d.StreamListItem(ctx, v)
-		}
-	}
-
-	err = paginator.Close(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return nil, nil
-}
-
-var getUserInviteFilters = map[string]string{
-	"email":              "Description.Email",
-	"id":                 "Description.ID",
-	"invite_url":         "Description.InviteURL",
-	"inviter_id":         "Description.InviterID",
-	"last_email_sent_at": "Description.LastEmailSentAt",
-	"role":               "Description.Role",
-	"tailnet_id":         "Description.TailnetID",
-}
-
-func GetUserInvite(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
-	plugin.Logger(ctx).Trace("GetUserInvite")
-	runtime.GC()
-	// create service
-	cfg := essdk.GetConfig(d.Connection)
-	ke, err := essdk.NewClientCached(cfg, d.ConnectionCache, ctx)
-	if err != nil {
-		return nil, err
-	}
-	k := Client{Client: ke}
-
-	sc, err := steampipesdk.NewSelfClientCached(ctx, d.ConnectionCache)
-	if err != nil {
-		return nil, err
-	}
-	integrationId, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyIntegrationID)
-	if err != nil {
-		return nil, err
-	}
-	encodedResourceCollectionFilters, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyResourceCollectionFilters)
-	if err != nil {
-		return nil, err
-	}
-	clientType, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyClientType)
-	if err != nil {
-		return nil, err
-	}
-
-	limit := int64(1)
-	paginator, err := k.NewUserInvitePaginator(essdk.BuildFilter(ctx, d.QueryContext, getUserInviteFilters, integrationId, encodedResourceCollectionFilters, clientType), &limit)
-	if err != nil {
-		return nil, err
-	}
-
-	for paginator.HasNext() {
-		page, err := paginator.NextPage(ctx)
-		if err != nil {
-			return nil, err
-		}
-
-		for _, v := range page {
-			return v, nil
-		}
-	}
-
-	err = paginator.Close(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return nil, nil
-}
-
-// ==========================  END: UserInvite =============================
-
 // ==========================  START: DeviceInvite =============================
 
 type DeviceInvite struct {
@@ -1321,6 +1106,221 @@ func GetDeviceInvite(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrate
 }
 
 // ==========================  END: DeviceInvite =============================
+
+// ==========================  START: UserInvite =============================
+
+type UserInvite struct {
+	ResourceID      string                          `json:"resource_id"`
+	PlatformID      string                          `json:"platform_id"`
+	Description     tailscale.UserInviteDescription `json:"Description"`
+	Metadata        tailscale.Metadata              `json:"metadata"`
+	DescribedBy     string                          `json:"described_by"`
+	ResourceType    string                          `json:"resource_type"`
+	IntegrationType string                          `json:"integration_type"`
+	IntegrationID   string                          `json:"integration_id"`
+}
+
+type UserInviteHit struct {
+	ID      string        `json:"_id"`
+	Score   float64       `json:"_score"`
+	Index   string        `json:"_index"`
+	Type    string        `json:"_type"`
+	Version int64         `json:"_version,omitempty"`
+	Source  UserInvite    `json:"_source"`
+	Sort    []interface{} `json:"sort"`
+}
+
+type UserInviteHits struct {
+	Total essdk.SearchTotal `json:"total"`
+	Hits  []UserInviteHit   `json:"hits"`
+}
+
+type UserInviteSearchResponse struct {
+	PitID string         `json:"pit_id"`
+	Hits  UserInviteHits `json:"hits"`
+}
+
+type UserInvitePaginator struct {
+	paginator *essdk.BaseESPaginator
+}
+
+func (k Client) NewUserInvitePaginator(filters []essdk.BoolFilter, limit *int64) (UserInvitePaginator, error) {
+	paginator, err := essdk.NewPaginator(k.ES(), "tailscale_user_invite", filters, limit)
+	if err != nil {
+		return UserInvitePaginator{}, err
+	}
+
+	p := UserInvitePaginator{
+		paginator: paginator,
+	}
+
+	return p, nil
+}
+
+func (p UserInvitePaginator) HasNext() bool {
+	return !p.paginator.Done()
+}
+
+func (p UserInvitePaginator) Close(ctx context.Context) error {
+	return p.paginator.Deallocate(ctx)
+}
+
+func (p UserInvitePaginator) NextPage(ctx context.Context) ([]UserInvite, error) {
+	var response UserInviteSearchResponse
+	err := p.paginator.Search(ctx, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	var values []UserInvite
+	for _, hit := range response.Hits.Hits {
+		values = append(values, hit.Source)
+	}
+
+	hits := int64(len(response.Hits.Hits))
+	if hits > 0 {
+		p.paginator.UpdateState(hits, response.Hits.Hits[hits-1].Sort, response.PitID)
+	} else {
+		p.paginator.UpdateState(hits, nil, "")
+	}
+
+	return values, nil
+}
+
+var listUserInviteFilters = map[string]string{
+	"email":              "Description.Email",
+	"id":                 "Description.ID",
+	"invite_url":         "Description.InviteURL",
+	"inviter_id":         "Description.InviterID",
+	"last_email_sent_at": "Description.LastEmailSentAt",
+	"role":               "Description.Role",
+	"tailnet_id":         "Description.TailnetID",
+}
+
+func ListUserInvite(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+	plugin.Logger(ctx).Trace("ListUserInvite")
+	runtime.GC()
+
+	// create service
+	cfg := essdk.GetConfig(d.Connection)
+	ke, err := essdk.NewClientCached(cfg, d.ConnectionCache, ctx)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListUserInvite NewClientCached", "error", err)
+		return nil, err
+	}
+	k := Client{Client: ke}
+
+	sc, err := steampipesdk.NewSelfClientCached(ctx, d.ConnectionCache)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListUserInvite NewSelfClientCached", "error", err)
+		return nil, err
+	}
+	integrationId, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyIntegrationID)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListUserInvite GetConfigTableValueOrNil for OpenGovernanceConfigKeyIntegrationID", "error", err)
+		return nil, err
+	}
+	encodedResourceCollectionFilters, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyResourceCollectionFilters)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListUserInvite GetConfigTableValueOrNil for OpenGovernanceConfigKeyResourceCollectionFilters", "error", err)
+		return nil, err
+	}
+	clientType, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyClientType)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListUserInvite GetConfigTableValueOrNil for OpenGovernanceConfigKeyClientType", "error", err)
+		return nil, err
+	}
+
+	paginator, err := k.NewUserInvitePaginator(essdk.BuildFilter(ctx, d.QueryContext, listUserInviteFilters, integrationId, encodedResourceCollectionFilters, clientType), d.QueryContext.Limit)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListUserInvite NewUserInvitePaginator", "error", err)
+		return nil, err
+	}
+
+	for paginator.HasNext() {
+		page, err := paginator.NextPage(ctx)
+		if err != nil {
+			plugin.Logger(ctx).Error("ListUserInvite paginator.NextPage", "error", err)
+			return nil, err
+		}
+
+		for _, v := range page {
+			d.StreamListItem(ctx, v)
+		}
+	}
+
+	err = paginator.Close(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+var getUserInviteFilters = map[string]string{
+	"email":              "Description.Email",
+	"id":                 "Description.ID",
+	"invite_url":         "Description.InviteURL",
+	"inviter_id":         "Description.InviterID",
+	"last_email_sent_at": "Description.LastEmailSentAt",
+	"role":               "Description.Role",
+	"tailnet_id":         "Description.TailnetID",
+}
+
+func GetUserInvite(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+	plugin.Logger(ctx).Trace("GetUserInvite")
+	runtime.GC()
+	// create service
+	cfg := essdk.GetConfig(d.Connection)
+	ke, err := essdk.NewClientCached(cfg, d.ConnectionCache, ctx)
+	if err != nil {
+		return nil, err
+	}
+	k := Client{Client: ke}
+
+	sc, err := steampipesdk.NewSelfClientCached(ctx, d.ConnectionCache)
+	if err != nil {
+		return nil, err
+	}
+	integrationId, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyIntegrationID)
+	if err != nil {
+		return nil, err
+	}
+	encodedResourceCollectionFilters, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyResourceCollectionFilters)
+	if err != nil {
+		return nil, err
+	}
+	clientType, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyClientType)
+	if err != nil {
+		return nil, err
+	}
+
+	limit := int64(1)
+	paginator, err := k.NewUserInvitePaginator(essdk.BuildFilter(ctx, d.QueryContext, getUserInviteFilters, integrationId, encodedResourceCollectionFilters, clientType), &limit)
+	if err != nil {
+		return nil, err
+	}
+
+	for paginator.HasNext() {
+		page, err := paginator.NextPage(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, v := range page {
+			return v, nil
+		}
+	}
+
+	err = paginator.Close(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+// ==========================  END: UserInvite =============================
 
 // ==========================  START: PostureIntegration =============================
 
@@ -2179,3 +2179,206 @@ func GetTailnetSettings(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydr
 }
 
 // ==========================  END: TailnetSettings =============================
+
+// ==========================  START: DNS =============================
+
+type DNS struct {
+	ResourceID      string                   `json:"resource_id"`
+	PlatformID      string                   `json:"platform_id"`
+	Description     tailscale.DNSDescription `json:"Description"`
+	Metadata        tailscale.Metadata       `json:"metadata"`
+	DescribedBy     string                   `json:"described_by"`
+	ResourceType    string                   `json:"resource_type"`
+	IntegrationType string                   `json:"integration_type"`
+	IntegrationID   string                   `json:"integration_id"`
+}
+
+type DNSHit struct {
+	ID      string        `json:"_id"`
+	Score   float64       `json:"_score"`
+	Index   string        `json:"_index"`
+	Type    string        `json:"_type"`
+	Version int64         `json:"_version,omitempty"`
+	Source  DNS           `json:"_source"`
+	Sort    []interface{} `json:"sort"`
+}
+
+type DNSHits struct {
+	Total essdk.SearchTotal `json:"total"`
+	Hits  []DNSHit          `json:"hits"`
+}
+
+type DNSSearchResponse struct {
+	PitID string  `json:"pit_id"`
+	Hits  DNSHits `json:"hits"`
+}
+
+type DNSPaginator struct {
+	paginator *essdk.BaseESPaginator
+}
+
+func (k Client) NewDNSPaginator(filters []essdk.BoolFilter, limit *int64) (DNSPaginator, error) {
+	paginator, err := essdk.NewPaginator(k.ES(), "tailscale_dns", filters, limit)
+	if err != nil {
+		return DNSPaginator{}, err
+	}
+
+	p := DNSPaginator{
+		paginator: paginator,
+	}
+
+	return p, nil
+}
+
+func (p DNSPaginator) HasNext() bool {
+	return !p.paginator.Done()
+}
+
+func (p DNSPaginator) Close(ctx context.Context) error {
+	return p.paginator.Deallocate(ctx)
+}
+
+func (p DNSPaginator) NextPage(ctx context.Context) ([]DNS, error) {
+	var response DNSSearchResponse
+	err := p.paginator.Search(ctx, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	var values []DNS
+	for _, hit := range response.Hits.Hits {
+		values = append(values, hit.Source)
+	}
+
+	hits := int64(len(response.Hits.Hits))
+	if hits > 0 {
+		p.paginator.UpdateState(hits, response.Hits.Hits[hits-1].Sort, response.PitID)
+	} else {
+		p.paginator.UpdateState(hits, nil, "")
+	}
+
+	return values, nil
+}
+
+var listDNSFilters = map[string]string{
+	"dns": "Description.DNS",
+}
+
+func ListDNS(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+	plugin.Logger(ctx).Trace("ListDNS")
+	runtime.GC()
+
+	// create service
+	cfg := essdk.GetConfig(d.Connection)
+	ke, err := essdk.NewClientCached(cfg, d.ConnectionCache, ctx)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListDNS NewClientCached", "error", err)
+		return nil, err
+	}
+	k := Client{Client: ke}
+
+	sc, err := steampipesdk.NewSelfClientCached(ctx, d.ConnectionCache)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListDNS NewSelfClientCached", "error", err)
+		return nil, err
+	}
+	integrationId, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyIntegrationID)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListDNS GetConfigTableValueOrNil for OpenGovernanceConfigKeyIntegrationID", "error", err)
+		return nil, err
+	}
+	encodedResourceCollectionFilters, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyResourceCollectionFilters)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListDNS GetConfigTableValueOrNil for OpenGovernanceConfigKeyResourceCollectionFilters", "error", err)
+		return nil, err
+	}
+	clientType, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyClientType)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListDNS GetConfigTableValueOrNil for OpenGovernanceConfigKeyClientType", "error", err)
+		return nil, err
+	}
+
+	paginator, err := k.NewDNSPaginator(essdk.BuildFilter(ctx, d.QueryContext, listDNSFilters, integrationId, encodedResourceCollectionFilters, clientType), d.QueryContext.Limit)
+	if err != nil {
+		plugin.Logger(ctx).Error("ListDNS NewDNSPaginator", "error", err)
+		return nil, err
+	}
+
+	for paginator.HasNext() {
+		page, err := paginator.NextPage(ctx)
+		if err != nil {
+			plugin.Logger(ctx).Error("ListDNS paginator.NextPage", "error", err)
+			return nil, err
+		}
+
+		for _, v := range page {
+			d.StreamListItem(ctx, v)
+		}
+	}
+
+	err = paginator.Close(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+var getDNSFilters = map[string]string{
+	"dns": "Description.DNS",
+}
+
+func GetDNS(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+	plugin.Logger(ctx).Trace("GetDNS")
+	runtime.GC()
+	// create service
+	cfg := essdk.GetConfig(d.Connection)
+	ke, err := essdk.NewClientCached(cfg, d.ConnectionCache, ctx)
+	if err != nil {
+		return nil, err
+	}
+	k := Client{Client: ke}
+
+	sc, err := steampipesdk.NewSelfClientCached(ctx, d.ConnectionCache)
+	if err != nil {
+		return nil, err
+	}
+	integrationId, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyIntegrationID)
+	if err != nil {
+		return nil, err
+	}
+	encodedResourceCollectionFilters, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyResourceCollectionFilters)
+	if err != nil {
+		return nil, err
+	}
+	clientType, err := sc.GetConfigTableValueOrNil(ctx, steampipesdk.OpenGovernanceConfigKeyClientType)
+	if err != nil {
+		return nil, err
+	}
+
+	limit := int64(1)
+	paginator, err := k.NewDNSPaginator(essdk.BuildFilter(ctx, d.QueryContext, getDNSFilters, integrationId, encodedResourceCollectionFilters, clientType), &limit)
+	if err != nil {
+		return nil, err
+	}
+
+	for paginator.HasNext() {
+		page, err := paginator.NextPage(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, v := range page {
+			return v, nil
+		}
+	}
+
+	err = paginator.Close(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+// ==========================  END: DNS =============================

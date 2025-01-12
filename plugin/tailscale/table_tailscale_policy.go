@@ -2,6 +2,7 @@ package tailscale
 
 import (
 	"context"
+	opengovernance "github.com/opengovern/og-describer-tailscale/pkg/sdk/es"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
@@ -11,11 +12,11 @@ func tableTailScalePolicy(ctx context.Context) *plugin.Table {
 	return &plugin.Table{
 		Name: "tailscale_policy",
 		List: &plugin.ListConfig{
-			Hydrate: nil,
+			Hydrate: opengovernance.ListPolicy,
 		},
 		Get: &plugin.GetConfig{
 			KeyColumns: plugin.SingleColumn("id"),
-			Hydrate:    nil,
+			Hydrate:    opengovernance.GetPolicy,
 		},
 		Columns: integrationColumns([]*plugin.Column{
 			{Name: "acls", Type: proto.ColumnType_JSON, Transform: transform.FromField("Description.ACLs"), Description: "The list of ACLs (Access Control Lists) associated with the policy."},

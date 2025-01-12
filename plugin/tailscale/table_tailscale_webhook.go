@@ -2,6 +2,7 @@ package tailscale
 
 import (
 	"context"
+	opengovernance "github.com/opengovern/og-describer-tailscale/pkg/sdk/es"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
@@ -11,11 +12,11 @@ func tableTailScaleWebhook(ctx context.Context) *plugin.Table {
 	return &plugin.Table{
 		Name: "tailscale_webhook",
 		List: &plugin.ListConfig{
-			Hydrate: nil,
+			Hydrate: opengovernance.ListWebhook,
 		},
 		Get: &plugin.GetConfig{
 			KeyColumns: plugin.SingleColumn("endpoint_id"),
-			Hydrate:    nil,
+			Hydrate:    opengovernance.GetWebhook,
 		},
 		Columns: integrationColumns([]*plugin.Column{
 			{Name: "endpoint_id", Type: proto.ColumnType_STRING, Transform: transform.FromField("Description.EndpointID"), Description: "The unique identifier for the webhook endpoint."},

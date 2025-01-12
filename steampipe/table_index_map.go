@@ -15,6 +15,7 @@ var Map = map[string]string{
   "TailScale/Policy": "tailscale_policy",
   "TailScale/TailnetSetting": "tailscale_tailnet_setting",
   "TailScale/Webhook": "tailscale_webhook",
+  "TailScale/DNS": "tailscale_dns",
 }
 
 var DescriptionMap = map[string]interface{}{
@@ -28,6 +29,7 @@ var DescriptionMap = map[string]interface{}{
   "TailScale/Policy": opengovernance.Policy{},
   "TailScale/TailnetSetting": opengovernance.TailnetSettings{},
   "TailScale/Webhook": opengovernance.Webhook{},
+  "TailScale/DNS": opengovernance.DNS{},
 }
 
 var ReverseMap = map[string]string{
@@ -41,4 +43,5 @@ var ReverseMap = map[string]string{
   "tailscale_policy": "TailScale/Policy",
   "tailscale_tailnet_setting": "TailScale/TailnetSetting",
   "tailscale_webhook": "TailScale/Webhook",
+  "tailscale_dns": "TailScale/DNS",
 }

@@ -107,4 +107,14 @@ var ResourceTypes = map[string]model.ResourceType{
 		ListDescriber:   DescribeListByTailScale(describer.ListWebhooks),
 		GetDescriber:    DescribeSingleByTailScale(describer.GetWebhook),
 	},
+
+	"TailScale/DNS": {
+		IntegrationType: configs.IntegrationName,
+		ResourceName:    "TailScale/DNS",
+		Tags:            map[string][]string{},
+		Labels:          map[string]string{},
+		Annotations:     map[string]string{},
+		ListDescriber:   DescribeListByTailScale(describer.ListDNSs),
+		GetDescriber:    nil,
+	},
 }

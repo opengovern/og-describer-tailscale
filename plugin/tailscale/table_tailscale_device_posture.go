@@ -2,6 +2,7 @@ package tailscale
 
 import (
 	"context"
+	opengovernance "github.com/opengovern/og-describer-tailscale/pkg/sdk/es"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
@@ -11,11 +12,11 @@ func tableTailScaleDevicePosture(ctx context.Context) *plugin.Table {
 	return &plugin.Table{
 		Name: "tailscale_device_posture",
 		List: &plugin.ListConfig{
-			Hydrate: nil,
+			Hydrate: opengovernance.ListPostureIntegration,
 		},
 		Get: &plugin.GetConfig{
 			KeyColumns: plugin.SingleColumn("id"),
-			Hydrate:    nil,
+			Hydrate:    opengovernance.GetPostureIntegration,
 		},
 		Columns: integrationColumns([]*plugin.Column{
 			{Name: "provider", Type: proto.ColumnType_STRING, Transform: transform.FromField("Description.Provider"), Description: "The provider of the posture integration."},

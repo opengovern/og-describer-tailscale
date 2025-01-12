@@ -2,6 +2,7 @@ package tailscale
 
 import (
 	"context"
+	opengovernance "github.com/opengovern/og-describer-tailscale/pkg/sdk/es"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
@@ -11,11 +12,11 @@ func tableTailScaleTailnetSetting(ctx context.Context) *plugin.Table {
 	return &plugin.Table{
 		Name: "tailscale_tailnet_setting",
 		List: &plugin.ListConfig{
-			Hydrate: nil,
+			Hydrate: opengovernance.ListTailnetSettings,
 		},
 		Get: &plugin.GetConfig{
 			KeyColumns: plugin.SingleColumn("id"),
-			Hydrate:    nil,
+			Hydrate:    opengovernance.GetTailnetSettings,
 		},
 		Columns: []*plugin.Column{
 			{Name: "devices_approval_on", Type: proto.ColumnType_BOOL, Transform: transform.FromField("Description.DevicesApprovalOn"), Description: "Whether device approval is enabled for the tailnet."},

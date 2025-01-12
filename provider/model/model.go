@@ -409,3 +409,15 @@ type TailnetSettingsDescription struct {
 	RegionalRoutingOn                      bool
 	PostureIdentityCollectionOn            bool
 }
+
+type ListDNSNameServerResponse struct {
+	DNS []string `json:"dns"`
+}
+
+type ListDNSSearchPathsResponse struct {
+	SearchPaths []string `json:"searchPaths"`
+}
+
+type DNSDescription struct {
+	DNS string
+}

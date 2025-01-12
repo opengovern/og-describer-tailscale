@@ -2,6 +2,7 @@ package tailscale
 
 import (
 	"context"
+	opengovernance "github.com/opengovern/og-describer-tailscale/pkg/sdk/es"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
@@ -11,11 +12,11 @@ func tableTailScaleKey(ctx context.Context) *plugin.Table {
 	return &plugin.Table{
 		Name: "tailscale_key",
 		List: &plugin.ListConfig{
-			Hydrate: nil,
+			Hydrate: opengovernance.ListKey,
 		},
 		Get: &plugin.GetConfig{
 			KeyColumns: plugin.SingleColumn("id"),
-			Hydrate:    nil,
+			Hydrate:    opengovernance.GetKey,
 		},
 		Columns: integrationColumns([]*plugin.Column{
 			{Name: "id", Type: proto.ColumnType_STRING, Transform: transform.FromField("Description.ID"), Description: "The unique identifier for the key."},

@@ -68,5 +68,12 @@
     "GetDescriber": "DescribeSingleByTailScale(describer.GetWebhook)",
     "SteampipeTable": "tailscale_webhook",
     "Model": "Webhook"
+  },
+  {
+    "ResourceName": "TailScale/DNS",
+    "ListDescriber": "DescribeListByTailScale(describer.ListDNSs)",
+    "GetDescriber": "",
+    "SteampipeTable": "tailscale_dns",
+    "Model": "DNS"
   }
 ]

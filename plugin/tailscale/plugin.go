@@ -27,6 +27,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"tailscale_policy":          tableTailScalePolicy(ctx),
 			"tailscale_tailnet_setting": tableTailScaleTailnetSetting(ctx),
 			"tailscale_webhook":         tableTailScaleWebhook(ctx),
+			"tailscale_dns":             tableTailScaleDNS(ctx),
 		},
 	}
 	for key, table := range p.TableMap {
