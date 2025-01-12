@@ -12,5 +12,61 @@
     "GetDescriber": "DescribeSingleByTailScale(describer.GetUser)",
     "SteampipeTable": "tailscale_user",
     "Model": "User"
+  },
+  {
+    "ResourceName": "TailScale/Contact",
+    "ListDescriber": "DescribeListByTailScale(describer.ListContacts)",
+    "GetDescriber": "",
+    "SteampipeTable": "tailscale_contact",
+    "Model": "Contact"
+  },
+  {
+    "ResourceName": "TailScale/Device/Invite",
+    "ListDescriber": "DescribeListByTailScale(describer.ListDeviceInvites)",
+    "GetDescriber": "DescribeSingleByTailScale(describer.GetDeviceInvite)",
+    "SteampipeTable": "tailscale_device_invite",
+    "Model": "DeviceInvite"
+  },
+  {
+    "ResourceName": "TailScale/Device/Posture",
+    "ListDescriber": "DescribeListByTailScale(describer.ListDevicePostures)",
+    "GetDescriber": "DescribeSingleByTailScale(describer.GetDevicePosture)",
+    "SteampipeTable": "tailscale_device_posture",
+    "Model": "PostureIntegration"
+  },
+  {
+    "ResourceName": "TailScale/User/Invite",
+    "ListDescriber": "DescribeListByTailScale(describer.ListUserInvites)",
+    "GetDescriber": "DescribeSingleByTailScale(describer.GetUserInvite)",
+    "SteampipeTable": "tailscale_user_invite",
+    "Model": "UserInvite"
+  },
+  {
+    "ResourceName": "TailScale/Key",
+    "ListDescriber": "DescribeListByTailScale(describer.ListKeys)",
+    "GetDescriber": "DescribeSingleByTailScale(describer.GetKey)",
+    "SteampipeTable": "tailscale_key",
+    "Model": "Key"
+  },
+  {
+    "ResourceName": "TailScale/Policy",
+    "ListDescriber": "",
+    "GetDescriber": "DescribeSingleByTailScale(describer.GetPolicyFile)",
+    "SteampipeTable": "tailscale_policy",
+    "Model": "Policy"
+  },
+  {
+    "ResourceName": "TailScale/TailnetSetting",
+    "ListDescriber": "DescribeListByTailScale(describer.ListTailnetSettings)",
+    "GetDescriber": "",
+    "SteampipeTable": "tailscale_tailnet_setting",
+    "Model": "TailnetSettings"
+  },
+  {
+    "ResourceName": "TailScale/Webhook",
+    "ListDescriber": "DescribeListByTailScale(describer.ListWebhooks)",
+    "GetDescriber": "DescribeSingleByTailScale(describer.GetWebhook)",
+    "SteampipeTable": "tailscale_webhook",
+    "Model": "Webhook"
   }
 ]

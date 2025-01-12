@@ -234,26 +234,6 @@ type KeyDescription struct {
 	UserID       string
 }
 
-type UserInviteJSON struct {
-	ID              string     `json:"id"`
-	Role            string     `json:"role"`
-	TailnetID       int64      `json:"tailnetId"`
-	InviterID       int64      `json:"inviterId"`
-	Email           string     `json:"email,omitempty"`
-	LastEmailSentAt *time.Time `json:"lastEmailSentAt,omitempty"`
-	InviteURL       string     `json:"inviteUrl,omitempty"`
-}
-
-type UserInviteDescription struct {
-	ID              string
-	Role            string
-	TailnetID       int64
-	InviterID       int64
-	Email           string
-	LastEmailSentAt *time.Time
-	InviteURL       string
-}
-
 type AcceptedByJSON struct {
 	ID            int64  `json:"id"`
 	LoginName     string `json:"loginName"`
@@ -294,4 +274,138 @@ type DeviceInviteDescription struct {
 	InviteURL       string
 	Accepted        bool
 	AcceptedBy      *AcceptedBy
+}
+
+type UserInviteJSON struct {
+	ID              string     `json:"id"`
+	Role            string     `json:"role"`
+	TailnetID       int64      `json:"tailnetId"`
+	InviterID       int64      `json:"inviterId"`
+	Email           string     `json:"email,omitempty"`
+	LastEmailSentAt *time.Time `json:"lastEmailSentAt,omitempty"`
+	InviteURL       string     `json:"inviteUrl,omitempty"`
+}
+
+type UserInviteDescription struct {
+	ID              string
+	Role            string
+	TailnetID       int64
+	InviterID       int64
+	Email           string
+	LastEmailSentAt *time.Time
+	InviteURL       string
+}
+
+type StatusJSON struct {
+	LastSync             time.Time `json:"lastSync"`
+	Error                string    `json:"error,omitempty"`
+	MatchedCount         int       `json:"matchedCount"`
+	PossibleMatchedCount int       `json:"possibleMatchedCount"`
+	ProviderHostCount    int       `json:"providerHostCount"`
+}
+
+type Status struct {
+	LastSync             time.Time
+	Error                string
+	MatchedCount         int
+	PossibleMatchedCount int
+	ProviderHostCount    int
+}
+
+type ListPostureIntegrations struct {
+	Integrations []PostureIntegrationJSON `json:"integrations"`
+}
+
+type PostureIntegrationJSON struct {
+	Provider      string      `json:"provider"`
+	CloudID       string      `json:"cloudId"`
+	ClientID      string      `json:"clientId,omitempty"`
+	TenantID      string      `json:"tenantId,omitempty"`
+	ClientSecret  string      `json:"clientSecret,omitempty"`
+	ID            string      `json:"id"`
+	ConfigUpdated string      `json:"configUpdated"`
+	Status        *StatusJSON `json:"status,omitempty"`
+}
+
+type PostureIntegrationDescription struct {
+	Provider      string
+	CloudID       string
+	ClientID      string
+	TenantID      string
+	ClientSecret  string
+	ID            string
+	ConfigUpdated string
+	Status        *Status
+}
+
+type ContactDetailJSON struct {
+	Email             string `json:"email"`
+	FallbackEmail     string `json:"fallbackEmail,omitempty"`
+	NeedsVerification bool   `json:"needsVerification,omitempty"`
+}
+
+type ContactDetail struct {
+	Email             string
+	FallbackEmail     string
+	NeedsVerification bool
+}
+
+type ContactJSON struct {
+	Account  ContactDetailJSON `json:"account"`
+	Support  ContactDetailJSON `json:"support"`
+	Security ContactDetailJSON `json:"security"`
+}
+
+type ContactDescription struct {
+	Account  ContactDetail
+	Support  ContactDetail
+	Security ContactDetail
+}
+
+type ListWebhookResponse struct {
+	Webhooks []WebhookJSON `json:"webhooks"`
+}
+
+type WebhookJSON struct {
+	EndpointID       string    `json:"endpointId"`
+	EndpointURL      string    `json:"endpointUrl"`
+	ProviderType     string    `json:"providerType"`
+	CreatorLoginName string    `json:"creatorLoginName"`
+	Created          time.Time `json:"created"`
+	LastModified     time.Time `json:"lastModified"`
+	Subscriptions    []string  `json:"subscriptions"`
+	Secret           string    `json:"secret"`
+}
+
+type WebhookDescription struct {
+	EndpointID       string
+	EndpointURL      string
+	ProviderType     string
+	CreatorLoginName string
+	Created          time.Time
+	LastModified     time.Time
+	Subscriptions    []string
+	Secret           string
+}
+
+type TailnetSettingsJSON struct {
+	DevicesApprovalOn                      bool   `json:"devicesApprovalOn"`
+	DevicesAutoUpdatesOn                   bool   `json:"devicesAutoUpdatesOn"`
+	DevicesKeyDurationDays                 int    `json:"devicesKeyDurationDays"`
+	UsersApprovalOn                        bool   `json:"usersApprovalOn"`
+	UsersRoleAllowedToJoinExternalTailnets string `json:"usersRoleAllowedToJoinExternalTailnets"`
+	NetworkFlowLoggingOn                   bool   `json:"networkFlowLoggingOn"`
+	RegionalRoutingOn                      bool   `json:"regionalRoutingOn"`
+	PostureIdentityCollectionOn            bool   `json:"postureIdentityCollectionOn"`
+}
+
+type TailnetSettingsDescription struct {
+	DevicesApprovalOn                      bool
+	DevicesAutoUpdatesOn                   bool
+	DevicesKeyDurationDays                 int
+	UsersApprovalOn                        bool
+	UsersRoleAllowedToJoinExternalTailnets string
+	NetworkFlowLoggingOn                   bool
+	RegionalRoutingOn                      bool
+	PostureIdentityCollectionOn            bool
 }

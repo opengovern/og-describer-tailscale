@@ -17,8 +17,16 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 		},
 		DefaultTransform: transform.FromCamel(),
 		TableMap: map[string]*plugin.Table{
-			"tailscale_device": tableTailScaleDevice(ctx),
-			"tailscale_user":   tableTailScaleUser(ctx),
+			"tailscale_device":          tableTailScaleDevice(ctx),
+			"tailscale_user":            tableTailScaleUser(ctx),
+			"tailscale_contact":         tableTailScaleContact(ctx),
+			"tailscale_device_invite":   tableTailScaleDeviceInvite(ctx),
+			"tailscale_device_posture":  tableTailScaleDevicePosture(ctx),
+			"tailscale_user_invite":     tableTailScaleUserInvite(ctx),
+			"tailscale_key":             tableTailScaleKey(ctx),
+			"tailscale_policy":          tableTailScalePolicy(ctx),
+			"tailscale_tailnet_setting": tableTailScaleTailnetSetting(ctx),
+			"tailscale_webhook":         tableTailScaleWebhook(ctx),
 		},
 	}
 	for key, table := range p.TableMap {
