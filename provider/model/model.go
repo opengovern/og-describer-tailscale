@@ -153,3 +153,103 @@ type UserDescription struct {
 	LastSeen           time.Time
 	CurrentlyConnected bool
 }
+
+type ACLJSON struct {
+	Action string   `json:"action"`
+	Ports  []string `json:"ports"`
+	Users  []string `json:"users"`
+}
+
+type ACL struct {
+	Action string
+	Ports  []string
+	Users  []string
+}
+
+type PolicyJSON struct {
+	ACLs   []ACLJSON           `json:"acls"`
+	Groups map[string][]string `json:"groups"`
+	Hosts  map[string]string   `json:"hosts"`
+}
+
+type PolicyDescription struct {
+	ACLs   []ACL
+	Groups map[string][]string
+	Hosts  map[string]string
+}
+
+type CreatePermissionsJSON struct {
+	Reusable      bool     `json:"reusable,omitempty"`
+	Ephemeral     bool     `json:"ephemeral,omitempty"`
+	Preauthorized bool     `json:"preauthorized,omitempty"`
+	Tags          []string `json:"tags,omitempty"`
+}
+
+type CreatePermissions struct {
+	Reusable      bool
+	Ephemeral     bool
+	Preauthorized bool
+	Tags          []string
+}
+
+type DeviceCapabilitiesJSON struct {
+	Create CreatePermissionsJSON `json:"create,omitempty"`
+}
+
+type DeviceCapabilities struct {
+	Create CreatePermissions
+}
+
+type CapabilitiesJSON struct {
+	Devices DeviceCapabilities `json:"devices,omitempty"`
+}
+
+type Capabilities struct {
+	Devices DeviceCapabilities
+}
+
+type KeyListResponse struct {
+	Keys []KeyJSON `json:"keys"`
+}
+
+type KeyJSON struct {
+	ID           string           `json:"id"`
+	Created      *time.Time       `json:"created,omitempty"`
+	Expires      *time.Time       `json:"expires,omitempty"`
+	Revoked      *time.Time       `json:"revoked,omitempty"`
+	Capabilities CapabilitiesJSON `json:"capabilities,omitempty"`
+	Description  string           `json:"description,omitempty"`
+	Invalid      bool             `json:"invalid,omitempty"`
+	UserID       string           `json:"userId,omitempty"`
+}
+
+type KeyDescription struct {
+	ID           string
+	Created      *time.Time
+	Expires      *time.Time
+	Revoked      *time.Time
+	Capabilities Capabilities
+	Description  string
+	Invalid      bool
+	UserID       string
+}
+
+type UserInviteJSON struct {
+	ID              string     `json:"id"`
+	Role            string     `json:"role"`
+	TailnetID       int64      `json:"tailnetId"`
+	InviterID       int64      `json:"inviterId"`
+	Email           string     `json:"email,omitempty"`
+	LastEmailSentAt *time.Time `json:"lastEmailSentAt,omitempty"`
+	InviteURL       string     `json:"inviteUrl,omitempty"`
+}
+
+type UserInviteDescription struct {
+	ID              string
+	Role            string
+	TailnetID       int64
+	InviterID       int64
+	Email           string
+	LastEmailSentAt *time.Time
+	InviteURL       string
+}
