@@ -178,6 +178,26 @@ type PolicyDescription struct {
 	Hosts  map[string]string
 }
 
+type UserInviteJSON struct {
+	ID              string     `json:"id"`
+	Role            string     `json:"role"`
+	TailnetID       int64      `json:"tailnetId"`
+	InviterID       int64      `json:"inviterId"`
+	Email           string     `json:"email,omitempty"`
+	LastEmailSentAt *time.Time `json:"lastEmailSentAt,omitempty"`
+	InviteURL       string     `json:"inviteUrl,omitempty"`
+}
+
+type UserInviteDescription struct {
+	ID              string
+	Role            string
+	TailnetID       int64
+	InviterID       int64
+	Email           string
+	LastEmailSentAt *time.Time
+	InviteURL       string
+}
+
 type CreatePermissionsJSON struct {
 	Reusable      bool     `json:"reusable,omitempty"`
 	Ephemeral     bool     `json:"ephemeral,omitempty"`
@@ -232,24 +252,4 @@ type KeyDescription struct {
 	Description  string
 	Invalid      bool
 	UserID       string
-}
-
-type UserInviteJSON struct {
-	ID              string     `json:"id"`
-	Role            string     `json:"role"`
-	TailnetID       int64      `json:"tailnetId"`
-	InviterID       int64      `json:"inviterId"`
-	Email           string     `json:"email,omitempty"`
-	LastEmailSentAt *time.Time `json:"lastEmailSentAt,omitempty"`
-	InviteURL       string     `json:"inviteUrl,omitempty"`
-}
-
-type UserInviteDescription struct {
-	ID              string
-	Role            string
-	TailnetID       int64
-	InviterID       int64
-	Email           string
-	LastEmailSentAt *time.Time
-	InviteURL       string
 }
