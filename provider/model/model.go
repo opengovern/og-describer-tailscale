@@ -178,26 +178,6 @@ type PolicyDescription struct {
 	Hosts  map[string]string
 }
 
-type UserInviteJSON struct {
-	ID              string     `json:"id"`
-	Role            string     `json:"role"`
-	TailnetID       int64      `json:"tailnetId"`
-	InviterID       int64      `json:"inviterId"`
-	Email           string     `json:"email,omitempty"`
-	LastEmailSentAt *time.Time `json:"lastEmailSentAt,omitempty"`
-	InviteURL       string     `json:"inviteUrl,omitempty"`
-}
-
-type UserInviteDescription struct {
-	ID              string
-	Role            string
-	TailnetID       int64
-	InviterID       int64
-	Email           string
-	LastEmailSentAt *time.Time
-	InviteURL       string
-}
-
 type CreatePermissionsJSON struct {
 	Reusable      bool     `json:"reusable,omitempty"`
 	Ephemeral     bool     `json:"ephemeral,omitempty"`
@@ -252,4 +232,66 @@ type KeyDescription struct {
 	Description  string
 	Invalid      bool
 	UserID       string
+}
+
+type UserInviteJSON struct {
+	ID              string     `json:"id"`
+	Role            string     `json:"role"`
+	TailnetID       int64      `json:"tailnetId"`
+	InviterID       int64      `json:"inviterId"`
+	Email           string     `json:"email,omitempty"`
+	LastEmailSentAt *time.Time `json:"lastEmailSentAt,omitempty"`
+	InviteURL       string     `json:"inviteUrl,omitempty"`
+}
+
+type UserInviteDescription struct {
+	ID              string
+	Role            string
+	TailnetID       int64
+	InviterID       int64
+	Email           string
+	LastEmailSentAt *time.Time
+	InviteURL       string
+}
+
+type AcceptedByJSON struct {
+	ID            int64  `json:"id"`
+	LoginName     string `json:"loginName"`
+	ProfilePicURL string `json:"profilePicUrl"`
+}
+
+type AcceptedBy struct {
+	ID            int64
+	LoginName     string
+	ProfilePicURL string
+}
+
+type DeviceInviteJSON struct {
+	ID              string          `json:"id"`
+	Created         time.Time       `json:"created"`
+	TailnetID       int64           `json:"tailnetId"`
+	DeviceID        int64           `json:"deviceId"`
+	SharerID        int64           `json:"sharerId"`
+	MultiUse        bool            `json:"multiUse,omitempty"`
+	AllowExitNode   bool            `json:"allowExitNode,omitempty"`
+	Email           string          `json:"email,omitempty"`
+	LastEmailSentAt *time.Time      `json:"lastEmailSentAt,omitempty"`
+	InviteURL       string          `json:"inviteUrl,omitempty"`
+	Accepted        bool            `json:"accepted"`
+	AcceptedBy      *AcceptedByJSON `json:"acceptedBy,omitempty"`
+}
+
+type DeviceInviteDescription struct {
+	ID              string
+	Created         time.Time
+	TailnetID       int64
+	DeviceID        int64
+	SharerID        int64
+	MultiUse        bool
+	AllowExitNode   bool
+	Email           string
+	LastEmailSentAt *time.Time
+	InviteURL       string
+	Accepted        bool
+	AcceptedBy      *AcceptedBy
 }
