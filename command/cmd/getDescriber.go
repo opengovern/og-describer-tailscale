@@ -22,6 +22,7 @@ import (
 
 var (
 	resourceID string
+	Token      = os.Getenv("TOKEN")
 )
 
 // getDescriberCmd represents the describer command
