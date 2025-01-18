@@ -52,7 +52,7 @@ var getDescriberCmd = &cobra.Command{
 		logger, _ := zap.NewProduction()
 
 		creds, err := provider.AccountCredentialsFromMap(map[string]any{
-			"token": "tskey-api-kvMaa7hZju11CNTRL-grhiLtpHzyiD6qB8kS15yi1oZUKxenwH",
+			"token": Token,
 		})
 		if err != nil {
 			return fmt.Errorf(" account credentials: %w", err)
