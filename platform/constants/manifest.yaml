@@ -1,1 +1,2 @@
-IntegrationType: template 
+IntegrationType: tailscale
+DescriberURL:  ghcr.io/opengovern/og-describer-tailscale
