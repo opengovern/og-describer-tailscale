@@ -17,6 +17,6 @@ const (
 )
 
 const (
-	DescriberDeploymentName = "og-describers-tailscale"
-	DescriberRunCommand     = "/og-describers-tailscale"
+	DescriberDeploymentName = "og-describer-tailscale"
+	DescriberRunCommand     = "/og-describer-tailscale"
 )
