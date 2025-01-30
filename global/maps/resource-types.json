@@ -50,8 +50,8 @@
   },
   {
     "ResourceName": "TailScale/Policy",
-    "ListDescriber": "",
-    "GetDescriber": "DescribeSingleByTailScale(describer.GetPolicyFile)",
+    "ListDescriber": "DescribeListByTailScale(describer.ListPolicyFiles)",
+    "GetDescriber": "",
     "SteampipeTable": "tailscale_policy",
     "Model": "Policy"
   },

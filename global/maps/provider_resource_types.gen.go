@@ -86,8 +86,8 @@ var ResourceTypes = map[string]model.ResourceType{
 		Tags:            map[string][]string{},
 		Labels:          map[string]string{},
 		Annotations:     map[string]string{},
-		ListDescriber:   nil,
-		GetDescriber:    provider.DescribeSingleByTailScale(describers.GetPolicyFile),
+		ListDescriber:   provider.DescribeListByTailScale(describers.ListPolicyFiles),
+		GetDescriber:    nil,
 	},
 
 	"TailScale/TailnetSetting": {

@@ -16,7 +16,7 @@ func tableTailScalePolicy(ctx context.Context) *plugin.Table {
 		},
 		Get: &plugin.GetConfig{
 			KeyColumns: plugin.SingleColumn("id"),
-			Hydrate:    opengovernance.GetKey,
+			Hydrate:    opengovernance.GetPolicy,
 		},
 		Columns: integrationColumns([]*plugin.Column{
 			{Name: "acls", Type: proto.ColumnType_JSON, Transform: transform.FromField("Description.ACLs"), Description: "The list of ACLs (Access Control Lists) associated with the policy."},

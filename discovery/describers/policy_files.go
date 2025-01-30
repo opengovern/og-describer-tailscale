@@ -9,8 +9,8 @@ import (
 	resilientbridge "github.com/opengovern/resilient-bridge"
 )
 
-func GetPolicyFile(ctx context.Context, handler *resilientbridge.ResilientBridge, resourceID string) (*models.Resource, error) {
-	policy, err := processPolicyFile(ctx, handler, resourceID)
+func ListPolicyFiles(ctx context.Context, handler *resilientbridge.ResilientBridge, stream *models.StreamSender) ([]models.Resource, error) {
+	policy, err := processPolicyFile(ctx, handler)
 	if err != nil {
 		return nil, err
 	}
@@ -26,6 +26,7 @@ func GetPolicyFile(ctx context.Context, handler *resilientbridge.ResilientBridge
 	if err != nil {
 		return nil, err
 	}
+	var values []models.Resource
 	value := models.Resource{
 		ID:   string(jsonBytes),
 		Name: "",
@@ -35,18 +36,23 @@ func GetPolicyFile(ctx context.Context, handler *resilientbridge.ResilientBridge
 			Hosts:  policy.Hosts,
 		},
 	}
-	return &value, nil
+	if stream != nil {
+		if err := (*stream)(value); err != nil {
+			return nil, err
+		}
+	} else {
+		values = append(values, value)
+	}
+	return values, nil
 }
 
-func processPolicyFile(ctx context.Context, handler *resilientbridge.ResilientBridge, resourceID string) (*provider.PolicyJSON, error) {
+func processPolicyFile(ctx context.Context, handler *resilientbridge.ResilientBridge) (*provider.PolicyJSON, error) {
 	var policy provider.PolicyJSON
 	baseURL := "/v2/tailnet/-/acl"
 
-	finalURL := fmt.Sprintf("%s%s", baseURL, resourceID)
-
 	req := &resilientbridge.NormalizedRequest{
 		Method:   "GET",
-		Endpoint: finalURL,
+		Endpoint: baseURL,
 		Headers:  map[string]string{"accept": "application/json"},
 	}
 
