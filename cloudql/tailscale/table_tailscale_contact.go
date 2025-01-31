@@ -15,7 +15,7 @@ func tableTailScaleContact(ctx context.Context) *plugin.Table {
 			Hydrate: opengovernance.ListContact,
 		},
 		Get: &plugin.GetConfig{
-			KeyColumns: plugin.SingleColumn("account_email"),
+			KeyColumns: plugin.SingleColumn("account"),
 			Hydrate:    opengovernance.GetContact,
 		},
 		Columns: integrationColumns([]*plugin.Column{

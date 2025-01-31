@@ -15,7 +15,7 @@ func tableTailScalePolicy(ctx context.Context) *plugin.Table {
 			Hydrate: opengovernance.ListPolicy,
 		},
 		Get: &plugin.GetConfig{
-			KeyColumns: plugin.SingleColumn("id"),
+			KeyColumns: plugin.SingleColumn("acls"),
 			Hydrate:    opengovernance.GetPolicy,
 		},
 		Columns: integrationColumns([]*plugin.Column{

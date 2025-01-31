@@ -15,7 +15,7 @@ func tableTailScaleTailnetSetting(ctx context.Context) *plugin.Table {
 			Hydrate: opengovernance.ListTailnetSettings,
 		},
 		Get: &plugin.GetConfig{
-			KeyColumns: plugin.SingleColumn("id"),
+			KeyColumns: plugin.SingleColumn("users_role_allowed_to_join_external_tailnets"),
 			Hydrate:    opengovernance.GetTailnetSettings,
 		},
 		Columns: []*plugin.Column{
